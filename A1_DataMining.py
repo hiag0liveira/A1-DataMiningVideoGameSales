@@ -138,10 +138,21 @@ with PdfPages('relatorio_vendas_games.pdf') as pdf:
 
         df = df.drop(['img','title','release_date','last_update','total_sales'], axis=1, errors='ignore');
 
-        #Garantindo que dados críticos com valores nulos não sejam utilizados, pra melhorar o treinamento
+        # Contagem de linhas antes
+        rows_before = df.shape[0]
+
+        # Remover linhas com NaN em colunas que precisamos
         df.dropna(subset=['console','genre','publisher','developer',
-                          'na_sales','jp_sales','pal_sales','other_sales',
-                          'critic_score','region_preference'], inplace=True)
+                        'na_sales','jp_sales','pal_sales','other_sales',
+                        'critic_score','region_preference'], 
+                inplace=True)
+
+        # Contagem de linhas depois
+        rows_after = df.shape[0]
+        rows_removed = rows_before - rows_after
+
+        print(f"{rows_removed} linhas foram removidas por conterem valores nulos nas colunas necessárias.\n\n\n")
+
 
         #Trocando as variáveis que estão como string para dados números, já que modelos de machine learning normalmente utilizam este formato de dados.
         encoder = LabelEncoder()
