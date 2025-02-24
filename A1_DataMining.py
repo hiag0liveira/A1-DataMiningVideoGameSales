@@ -134,16 +134,31 @@ with PdfPages('relatorio_vendas_games.pdf') as pdf:
     with redirect_stdout(buffer3):
         print("\nSEÇÃO 4: Pré-processamento\n")
 
-        df = df.drop(['img','title','release_date','last_update','total_sales'], axis=1, errors='ignore')
+        #Garantir que colunas que não são importantes não sejam utilizadas no treinamento
+
+        df = df.drop(['img','title','release_date','last_update','total_sales'], axis=1, errors='ignore');
+
+        #Garantindo que dados críticos com valores nulos não sejam utilizados, pra melhorar o treinamento
         df.dropna(subset=['console','genre','publisher','developer',
                           'na_sales','jp_sales','pal_sales','other_sales',
                           'critic_score','region_preference'], inplace=True)
 
+        #Trocando as variáveis que estão como string para dados números, já que modelos de machine learning normalmente utilizam este formato de dados.
         encoder = LabelEncoder()
         df['console'] = encoder.fit_transform(df['console'].astype(str))
         df['genre'] = encoder.fit_transform(df['genre'].astype(str))
         df['publisher'] = encoder.fit_transform(df['publisher'].astype(str))
         df['developer'] = encoder.fit_transform(df['developer'].astype(str))
+
+        # Reimprimimos os dados para verificar se foi tratado corretamente
+
+        print(df.head())
+        print(df.info())
+
+        # Imrpimindo a contagem por região para melhor visualização.
+        sns.countplot(x=df['region_preference'], palette='viridis')
+        plt.title("Contagem de jogos por preferência regional")
+
 
         y = df['region_preference']
         X = df.drop('region_preference', axis=1)
