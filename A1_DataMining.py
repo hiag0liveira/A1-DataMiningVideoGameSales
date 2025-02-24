@@ -231,7 +231,7 @@ with PdfPages('relatorio_vendas_games.pdf') as pdf:
         cm_display = ConfusionMatrixDisplay.from_predictions(
             y_true,
             y_pred,
-            cmap=plt.cm.Blues,
+            cmap=plt.get_cmap('Blues'),
             normalize='true',
             values_format='.2f',
             ax=ax_cm
