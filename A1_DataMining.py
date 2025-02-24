@@ -150,10 +150,12 @@ with PdfPages('relatorio_vendas_games.pdf') as pdf:
         # Contagem de linhas depois
         rows_after = df.shape[0]
         rows_removed = rows_before - rows_after
+        print("*************************************************************************\n")
 
-        print(f"{rows_removed} linhas foram removidas por conterem valores nulos nas colunas necessárias.\n\n\n")
+        print(f"{rows_removed} linhas foram removidas por conterem valores nulos nas colunas necessárias.\n\n")
+        print(f"Linhas que sobraram no dataset: {df.shape[0]} \n\n ")
 
-
+        print("*************************************************************************\n")
         #Trocando as variáveis que estão como string para dados números, já que modelos de machine learning normalmente utilizam este formato de dados.
         encoder = LabelEncoder()
         df['console'] = encoder.fit_transform(df['console'].astype(str))
